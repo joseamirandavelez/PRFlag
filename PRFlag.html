@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Puerto Rico</title>
+    <meta description="Displays an animated flag of Puerto Rico" />
+    <meta publisher="Jose Miranda" />
+    <!-- SignalRGB Controls -->
+    <meta property="enableAnimation" label="Enable Animation" type="boolean" default="true">
+    <meta property="flagStyle" label="Flag Style" type="combobox" values="Official,Revolucionary" default="Official"/>
+</head>
+<style>
+  #flag {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(0, 0, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+</style>
+<body>
+  <canvas id="flag" width="320" height="200"></canvas>
+</body>
+<script>
+let timer = null;
+let currentFlagStyle = null;
+let currentEnableAnimation = null;
+
+// Mock SignalRGB integration: log color data to console
+function sendToSignalRGB(color) {
+  var hex = color.replace('#', '');
+  var r = parseInt(hex.substr(0, 2), 16);
+  var g = parseInt(hex.substr(2, 2), 16);
+  var b = parseInt(hex.substr(4, 2), 16);
+  //console.log(`SignalRGB: Set color to RGB(${r}, ${g}, ${b})`);
+  // In a real setup, this would send a POST request to SignalRGB's REST API
+  // Example: POST http://localhost:16038/v1/color with { r: r, g: g, b: b }
+}
+
+function updateFlag() {
+  const flag = document.getElementById('flag');
+  
+  // Clear existing animation
+  if (timer) {
+    clearInterval(timer);
+    timer = null;
+  }
+
+  // Draw flag with current style
+  const blueColor = flagStyle === 'Official' ? '#0050f0' : '#87CEEB';
+  drawPuertoRicoFlag(flag, 320, blueColor);
+  
+  // Send color to SignalRGB
+  sendToSignalRGB(blueColor);
+
+  // Start animation if enabled
+  if (enableAnimation) {
+    timer = waveFlag(flag, 320, 30, 15, 200, 200);
+  }
+
+  // Update current state
+  currentFlagStyle = flagStyle;
+  currentEnableAnimation = enableAnimation;
+}
+
+// Poll for global variable changes (reflecting SignalRGB UI updates)
+function checkForChanges() {
+  if (flagStyle !== currentFlagStyle || enableAnimation !== currentEnableAnimation) {
+    updateFlag();
+  }
+}
+
+function drawPuertoRicoFlag(canvas, width, blueColor) {
+  var a = width / 1.5; // Height (aspect ratio 2:3, so height = width / 1.5)
+  var b = width; // Width
+  var l = a / 5; // Stripe height (5 equal stripes)
+  var triangleHeight = 0.54 * b; // Triangle height along the x-axis
+  canvas.width = b;
+  canvas.height = a;
+  var ctx = canvas.getContext('2d');
+
+  // Stripes
+  ctx.fillStyle = '#fff'; // White
+  ctx.fillRect(0, 0, b, a); // White background
+  ctx.fillStyle = '#ed0000'; // Red (official color)
+  for (var i = 0; i < 5; i += 2) { // Red stripes at indices 0, 2, 4
+    ctx.fillRect(0, i * l, b, l);
+  }
+
+  // Triangle
+  ctx.fillStyle = blueColor; // Dynamic blue color
+  ctx.beginPath();
+  ctx.moveTo(0, 0); // Top-left
+  ctx.lineTo(triangleHeight, a / 2); // Center of flag height
+  ctx.lineTo(0, a); // Bottom-left
+  ctx.closePath();
+  ctx.fill();
+
+  // Star
+  ctx.fillStyle = '#fff'; // White
+  var starCenterX = triangleHeight * 0.35; // Center star in triangle
+  var starCenterY = a / 2;
+  var starRadius = l * 0.8; // Adjust star size relative to stripe height
+  ctx.beginPath();
+  for (var i = 0; i < 5; i++) {
+    var angle = (Math.PI / 2) + (i * 4 * Math.PI / 5); // Five-pointed star
+    var x = starCenterX + starRadius * Math.cos(angle);
+    var y = starCenterY - starRadius * Math.sin(angle);
+    if (i === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  }
+  ctx.closePath();
+  ctx.fill();
+
+  // Border
+  ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(0, 0, b, a);
+}
+
+function waveFlag(canvas, width, wavelength, amplitude, period, shading) {
+  var fps = 60;
+  var ctx = canvas.getContext('2d');
+  var w = canvas.width, h = canvas.height;
+  var od = ctx.getImageData(0, 0, w, h).data;
+  return setInterval(function() {
+    var id = ctx.getImageData(0, 0, w, h);
+    var d = id.data;
+    var now = (new Date) / period;
+    for (var y = 0; y < h; ++y) {
+      var lastO = 0, shade = 0;
+      for (var x = 0; x < w; ++x) {
+        var px = (y * w + x) * 4;
+        var o = Math.sin(x / wavelength - now) * amplitude * x / w;
+        var opx = (((y + o) << 0) * w + x) * 4; // Fixed parenthesis
+        shade = (o - lastO) * shading;
+        d[px] = od[opx] + shade;
+        d[px + 1] = od[opx + 1] + shade;
+        d[px + 2] = od[opx + 2] + shade;
+        d[px + 3] = od[opx + 3];
+        lastO = o;
+      }
+    }
+    ctx.putImageData(id, 0, 0);
+  }, 1000 / fps);
+}
+
+window.onload = function() {
+  // Initialize state
+  currentFlagStyle = flagStyle || 'Official';
+  currentEnableAnimation = enableAnimation || true;
+  updateFlag();
+  setInterval(checkForChanges, 500); // Poll for global variable changes
+};
+</script>
+</html>
