@@ -7,6 +7,8 @@
     <!-- SignalRGB Controls -->
     <meta property="enableAnimation" label="Enable Animation" type="boolean" default="true">
     <meta property="flagStyle" label="Flag Style" type="combobox" values="Official,Revolucionary" default="Official"/>
+    <meta property="soundResponsive" label="Sound Responsive" type="boolean" default="true">
+    <meta property="soundResponsiveness" label="Sound Responsiveness" type="number" default="1" min="1" max="10">
 </head>
 <style>
   #flag {
@@ -52,7 +54,7 @@ function updateFlag() {
   
   // Clear existing animation
   if (timer) {
-    clearInterval(timer);
+    cancelAnimationFrame(timer);
     timer = null;
   }
 
@@ -65,7 +67,7 @@ function updateFlag() {
 
   // Start animation if enabled
   if (enableAnimation) {
-    timer = waveFlag(flag, 320, 30, 15, 200, 200);
+    timer = waveFlag(flag, 320, 40, 15, 200, 100); // Slower, smoother parameters
   }
 
   // Update current state
@@ -132,30 +134,70 @@ function drawPuertoRicoFlag(canvas, width, blueColor) {
 }
 
 function waveFlag(canvas, width, wavelength, amplitude, period, shading) {
-  var fps = 60;
   var ctx = canvas.getContext('2d');
   var w = canvas.width, h = canvas.height;
-  var od = ctx.getImageData(0, 0, w, h).data;
-  return setInterval(function() {
+  var od = ctx.getImageData(0, 0, w, h).data; // Original image data
+  //console.log('waveFlag started with period:', period, 'wavelength:', wavelength, 'amplitude:', amplitude, 'shading:', shading);
+
+  function animate() {
+    // Clear canvas to prevent residual images
+    ctx.clearRect(0, 0, w, h);
     var id = ctx.getImageData(0, 0, w, h);
     var d = id.data;
-    var now = (new Date) / period;
+    var now = Date.now() / period;
+
     for (var y = 0; y < h; ++y) {
-      var lastO = 0, shade = 0;
+      var lastO = 0;
       for (var x = 0; x < w; ++x) {
-        var px = (y * w + x) * 4;
-        var o = Math.sin(x / wavelength - now) * amplitude * x / w;
-        var opx = (((y + o) << 0) * w + x) * 4; // Fixed parenthesis
-        shade = (o - lastO) * shading;
-        d[px] = od[opx] + shade;
-        d[px + 1] = od[opx + 1] + shade;
-        d[px + 2] = od[opx + 2] + shade;
-        d[px + 3] = od[opx + 3];
+        // Wave with damping and perspective, no vertical variation for smoothness
+        var damp = 1 - (x / w) * 0.6; // Strong damping toward free end
+        
+        if (soundResponsive == true) {
+            var frequency = new Int8Array(engine.audio.freq)
+            reducedFreq = frequency.filter((element, index) => {
+                return index % 4 === 0;
+            })
+            var perspective = 1 + (x / w) * 2 + reducedFreq[5]*soundResponsiveness/10 ; // Subtle 3D effect
+        } else {
+            var perspective = 1 + (x / w) * 0.6; // Enhanced perspective
+        }
+        
+        
+        
+        
+        var o = Math.sin(x / wavelength - now) * amplitude * damp * perspective * (x / w); // Pinned at x=0
+        var yOffset = Math.round(y + o);
+        var xOffset = x; // No horizontal wave to reduce twitchiness
+
+        // Calculate pixel indices
+        var px = (y * w + x) * 4; // Destination pixel
+        var opx = (yOffset * w + xOffset) * 4; // Source pixel
+
+        // Shading based on wave slope for fabric folds
+        var slope = (o - lastO) * shading*3;
+        var shade = Math.min(40, Math.max(-40, slope)); // Tight clamp for smooth lighting
+
+        // Copy pixel with shading, ensure bounds
+        if (opx >= 0 && opx < od.length && yOffset >= 0 && yOffset < h) {
+          d[px] = Math.min(255, Math.max(0, od[opx] * (1 + shade / 255)));
+          d[px + 1] = Math.min(255, Math.max(0, od[opx + 1] * (1 + shade / 255)));
+          d[px + 2] = Math.min(255, Math.max(0, od[opx + 2] * (1 + shade / 255)));
+          d[px + 3] = od[opx + 3]; // Preserve alpha
+        } else {
+          d[px] = 0; // Black background for out-of-bounds
+          d[px + 1] = 0;
+          d[px + 2] = 0;
+          d[px + 3] = 255; // Fully opaque
+        }
         lastO = o;
       }
     }
     ctx.putImageData(id, 0, 0);
-  }, 1000 / fps);
+    timer = requestAnimationFrame(animate);
+  }
+
+  animate();
+  return timer;
 }
 
 window.onload = function() {
