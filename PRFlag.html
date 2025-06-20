@@ -153,11 +153,12 @@ function waveFlag(canvas, width, wavelength, amplitude, period, shading) {
         var damp = 1 - (x / w) * 0.6; // Strong damping toward free end
         
         if (soundResponsive == true) {
-            var frequency = new Int8Array(engine.audio.freq)
-            reducedFreq = frequency.filter((element, index) => {
-                return index % 4 === 0;
-            })
-            var perspective = 1 + (x / w) * 2 + reducedFreq[5]*soundResponsiveness/10 ; // Subtle 3D effect
+            //var frequency = new Int8Array(engine.audio.freq)
+            //reducedFreq = frequency.filter((element, index) => {
+            //    return index % 4 === 0;
+            //})
+            //var perspective = 1 + (x / w) * 2 + reducedFreq[5]*soundResponsiveness/10 ; // Subtle 3D effect
+            var perspective = 1 + (x / w) * 2 + engine.audio.level * engine.audio.density * soundResponsiveness ; // Subtle 3D effect
         } else {
             var perspective = 1 + (x / w) * 0.6; // Enhanced perspective
         }
