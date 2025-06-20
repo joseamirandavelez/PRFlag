@@ -7,3 +7,5 @@ Installation:
 2. Restart SignalRGB
 
 You will find the new effect in Library > Installed Effects
+
+Update: Now it is sound responsive!
