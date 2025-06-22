@@ -1,4 +1,4 @@
-# Puerto Rico Flag custom effect for SignalRGB
+# Flags of the World custom effect for SignalRGB
 
 ![alt text](https://github.com/joseamirandavelez/PRFlag/blob/main/PRFlag.png "Puerto Rico Flag")
 
