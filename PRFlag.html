@@ -2,12 +2,12 @@
 <html>
 
 <head>
-  <title>Puerto Rico</title>
-  <meta description="Displays an animated flag of Puerto Rico" />
+  <title>Flags of the World</title>
+  <meta description="Displays an animated flag" />
   <meta publisher="Jose Miranda" />
   <!-- SignalRGB Controls -->
   <meta property="enableAnimation" label="Enable Animation" type="boolean" default="true">
-  <meta property="flagStyle" label="Flag Style" type="combobox" values="Official,Revolucionary" default="Official" />
+  <meta property="flag" label="Country" type="combobox" values="Austria,Belgium,China,France,Germany,Indonesia,Italy,Netherlands,Norway,Poland,Puerto Rico,Puerto Rico (Revolutionary),Romania,Russia,SignalRGB,Sweden,Switzerland,Thailand,United Arab Emirates,United States of America,Vietnam,Custom" default="Puerto Rico">
   <meta property="soundResponsive" label="Sound Responsive" type="boolean" default="true">
   <meta property="soundResponsiveness" label="Sound Responsiveness" type="number" default="1" min="1" max="10">
 </head>
@@ -35,13 +35,14 @@
 <body>
   <canvas id="flag" width="320" height="200"></canvas>
 </body>
-<script>
-  let timer = null;
-  let currentFlagStyle = null;
-  let currentEnableAnimation = null;
 
-  function updateFlag() {
-    const flag = document.getElementById('flag');
+<script>
+let timer = null;
+let currentflag = null;
+let currentEnableAnimation = null;
+
+function updateFlag() {
+    const canvas = document.getElementById('flag');
 
     // Clear existing animation
     if (timer) {
@@ -50,27 +51,126 @@
     }
 
     // Draw flag with current style
-    const blueColor = flagStyle === 'Official' ? '#0050f0' : '#87CEEB';
-    drawPuertoRicoFlag(flag, 320, blueColor);
+    switch (flag) {
+      case "Australia":
+        drawAustraliaFlag(canvas, 320, '#0050f0');
+        break;
+      case "Austria":
+        drawAustriaFlag(canvas, 320, '#0050f0');
+        break;
+      case "Belgium":
+        drawBelgiumFlag(canvas, 320, '#0050f0');
+        break;
+      case "Brazil":
+        drawBrazilFlag(canvas, 320, '#0050f0');
+        break;
+      case "Canada":
+        drawCanadaFlag(canvas, 320, '#0050f0');
+        break;
+      case "China":
+        drawChinaFlag(canvas, 320, '#0050f0');
+        break;
+      case "France":
+        drawFranceFlag(canvas, 320, '#0050f0');
+        break;
+      case "Germany":
+        drawGermanyFlag(canvas, 320, '#0050f0');
+        break;
+      case "India":
+        drawIndiaFlag(canvas, 320, '#0050f0');
+        break;
+      case "Indonesia":
+        drawIndonesiaFlag(canvas, 320, '#0050f0');
+        break;
+      case "Italy":
+        drawItalyFlag(canvas, 320, '#0050f0');
+        break;
+      case "Malaysia":
+        drawMalaysiaFlag(canvas, 320, '#0050f0');
+        break;
+      case "Mexico":
+        drawMexicoFlag(canvas, 320, '#0050f0');
+        break;
+      case "Netherlands":
+        drawNetherlandsFlag(canvas, 320, '#0050f0');
+        break;
+      case "New Zealand":
+        drawNewZealandFlag(canvas, 320, '#0050f0');
+        break;
+      case "Norway":
+        drawNorwayFlag(canvas, 320, '#0050f0');
+        break;
+      case "Philippines":
+        drawPhilippinesFlag(canvas, 320, '#0050f0');
+        break;
+      case "Poland":
+        drawPolandFlag(canvas, 320, '#0050f0');
+        break;
+      case "Puerto Rico":
+        drawPuertoRicoFlag(canvas, 320, '#0044ff'); // Official Puerto Rico flag
+        break;
+      case "Puerto Rico (Revolutionary)":
+        drawPuertoRicoFlag(canvas, 320, '#88CFFA'); // Revolutionary Puerto Rico flag
+        break;
+      case "Romania":
+        drawRomaniaFlag(canvas, 320, '#0050f0');
+        break;
+      case "Russia":
+        drawRussiaFlag(canvas, 320, '#0050f0');
+        break;
+      case "Saudi Arabia":
+        drawSaudiArabiaFlag(canvas, 320, '#0050f0');
+        break;
+      case "SignalRGB":
+        drawSignalRGBFlag(canvas, 320, '#0050f0');
+        break;
+      case "Spain":
+        drawSpainFlag(canvas, 320, '#0050f0');
+        break;
+      case "Sweden":
+        drawSwedenFlag(canvas, 320, '#0050f0');
+        break;
+      case "Switzerland":
+        drawSwitzerlandFlag(canvas, 320, '#0050f0');
+        break;
+      case "Thailand":
+        drawThailandFlag(canvas, 320, '#0050f0');
+        break;
+      case "United Arab Emirates":
+        drawUAEFlag(canvas, 320, '#0050f0');
+        break;
+      case "United Kingdom":
+        drawUKFlag(canvas, 320, '#0050f0');
+        break;
+      case "United States of America":
+        drawUSAFlag(canvas, 320, '#0050f0');
+        break;
+      case "Vietnam":
+        drawVietnamFlag(canvas, 320, '#0050f0');
+        break;
+      default:
+        drawPuertoRicoFlag(canvas, 320, '#0050f0'); // Default to official Puerto Rico flag
+    }
 
     // Start animation if enabled
     if (enableAnimation) {
-      timer = waveFlag(flag, 320, 40, 15, 200, 100); // Slower, smoother parameters
+      timer = waveFlag(canvas, 320, 40, 15, 200, 100); // Slower, smoother parameters
     }
 
     // Update current state
-    currentFlagStyle = flagStyle;
+    currentflag = flag;
     currentEnableAnimation = enableAnimation;
-  }
+}
 
-  // Poll for global variable changes (reflecting SignalRGB UI updates)
-  function checkForChanges() {
-    if (flagStyle !== currentFlagStyle || enableAnimation !== currentEnableAnimation) {
+// Poll for global variable changes (reflecting SignalRGB UI updates)
+function checkForChanges() {
+    if (flag !== currentflag || enableAnimation !== currentEnableAnimation) {
       updateFlag();
     }
   }
 
-  function drawPuertoRicoFlag(canvas, width, blueColor) {
+function drawPuertoRicoFlag(canvas, width, blueColor) {
+    currentFlag=flag;
     var a = width / 1.5; // Height (aspect ratio 2:3, so height = width / 1.5)
     var b = width; // Width
     var l = a / 5; // Stripe height (5 equal stripes)
@@ -120,6 +220,1109 @@
     ctx.lineWidth = 1;
     ctx.strokeRect(0, 0, b, a);
   }
+
+  function drawSVG(canvas, width, blueColor) {
+    function drawPuertoRicoFlag(canvas, width, blueColor) {
+  currentFlag = flag; // Preserve existing variable (though 'flag' is undefined in provided code)
+  var a = width / 1.5; // Height (aspect ratio 2:3)
+  var b = width; // Width
+  var l = a / 5; // Stripe height (5 equal stripes)
+  var triangleHeight = 0.54 * b; // Triangle height along the x-axis
+
+  // Create SVG element
+  var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('width', b);
+  svg.setAttribute('height', a);
+  svg.setAttribute('viewBox', `0 0 ${b} ${a}`);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+  // Fabric texture filter
+  var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+  var filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+  filter.setAttribute('id', 'fabricTexture');
+  var turbulence = document.createElementNS('http://www.w3.org/2000/svg', 'feTurbulence');
+  turbulence.setAttribute('type', 'turbulence');
+  turbulence.setAttribute('baseFrequency', '0.05');
+  turbulence.setAttribute('numOctaves', '2');
+  turbulence.setAttribute('result', 'noise');
+  var displacement = document.createElementNS('http://www.w3.org/2000/svg', 'feDisplacementMap');
+  displacement.setAttribute('in', 'SourceGraphic');
+  displacement.setAttribute('in2', 'noise');
+  displacement.setAttribute('scale', '8');
+  displacement.setAttribute('xChannelSelector', 'R');
+  displacement.setAttribute('yChannelSelector', 'G');
+  filter.appendChild(turbulence);
+  filter.appendChild(displacement);
+  defs.appendChild(filter);
+  svg.appendChild(defs);
+
+  // White background (base stripe)
+  var whiteBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  whiteBg.setAttribute('x', '0');
+  whiteBg.setAttribute('y', '0');
+  whiteBg.setAttribute('width', b);
+  whiteBg.setAttribute('height', a);
+  whiteBg.setAttribute('fill', '#fff');
+  whiteBg.setAttribute('filter', 'url(#fabricTexture)');
+  svg.appendChild(whiteBg);
+
+  // Red stripes (indices 0, 2, 4)
+  for (var i = 0; i < 5; i += 2) {
+    var redStripe = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    redStripe.setAttribute('x', '0');
+    redStripe.setAttribute('y', i * l);
+    redStripe.setAttribute('width', b);
+    redStripe.setAttribute('height', l);
+    redStripe.setAttribute('fill', '#ed0000');
+    redStripe.setAttribute('filter', 'url(#fabricTexture)');
+    svg.appendChild(redStripe);
+  }
+
+  // Triangle
+  var triangle = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  triangle.setAttribute('d', `M0,0 L${triangleHeight},${a / 2} L0,${a} Z`);
+  triangle.setAttribute('fill', blueColor);
+  triangle.setAttribute('filter', 'url(#fabricTexture)');
+  svg.appendChild(triangle);
+
+  // Star
+  var starCenterX = triangleHeight * 0.35; // Center star in triangle
+  var starCenterY = a / 2;
+  var starRadius = l * 0.8; // Star size relative to stripe height
+  var starPath = '';
+  for (var i = 0; i < 5; i++) {
+    var angle = (Math.PI / 2) + (i * 4 * Math.PI / 5); // Five-pointed star
+    var x = starCenterX + starRadius * Math.cos(angle);
+    var y = starCenterY - starRadius * Math.sin(angle);
+    starPath += (i === 0 ? 'M' : 'L') + `${x},${y} `;
+  }
+  starPath += 'Z';
+  var star = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  star.setAttribute('d', starPath);
+  star.setAttribute('fill', '#fff');
+  star.setAttribute('filter', 'url(#fabricTexture)');
+  svg.appendChild(star);
+
+  // Border
+  var border = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  border.setAttribute('x', '0');
+  border.setAttribute('y', '0');
+  border.setAttribute('width', b);
+  border.setAttribute('height', a);
+  border.setAttribute('fill', 'none');
+  border.setAttribute('stroke', 'rgba(0, 0, 0, 0.8)');
+  border.setAttribute('stroke-width', '1');
+  svg.appendChild(border);
+
+  // Replace canvas with SVG
+  canvas.parentNode.replaceChild(svg, canvas);
+  svg.id = 'flag'; // Preserve ID for compatibility
+}
+  }
+
+function drawUSAFlag(canvas, width, blueColor) {
+    currentFlag=flag;
+    var a = width / 2; // Height (aspect ratio 1:2, so height = width / 2)
+    var b = width; // Width
+    var stripeHeight = a / 13; // 13 equal stripes
+    var cantonWidth = b * 0.4; // Canton width is 2/5 of flag width
+    var cantonHeight = stripeHeight * 7; // Canton height spans 7 stripes
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes
+    ctx.fillStyle = '#fff'; // White
+    ctx.fillRect(0, 0, b, a); // White background
+    ctx.fillStyle = '#B31942'; // Old Glory Red
+    for (var i = 0; i < 13; i += 2) { // Red stripes at indices 0, 2, 4, 6, 8, 10, 12
+        ctx.fillRect(0, i * stripeHeight, b, stripeHeight);
+    }
+
+    // Canton (blue rectangle)
+    ctx.fillStyle = '#0A3161'; // Old Glory Blue
+    ctx.fillRect(0, 0, cantonWidth, cantonHeight);
+
+    // Stars (50 stars in 9 rows: 6-5-6-5-6-5-6-5-6 pattern)
+    ctx.fillStyle = '#fff'; // White
+    var starRadius = stripeHeight * 0.3; // Star size relative to stripe height
+    var starSpacingX = cantonWidth / 12; // Horizontal spacing
+    var starSpacingY = cantonHeight / 10; // Vertical spacing
+    for (var row = 0; row < 9; row++) {
+        var starsInRow = (row % 2 === 0) ? 6 : 5; // Alternating 6 and 5 stars
+        var offsetX = (row % 2 === 0) ? starSpacingX : starSpacingX * 2; // Adjusted offset for odd rows
+        for (var col = 0; col < starsInRow; col++) {
+            var starCenterX = offsetX + col * starSpacingX * 2;
+            var starCenterY = starSpacingY + row * starSpacingY;
+            ctx.beginPath();
+            for (var i = 0; i < 5; i++) {
+                var angle = (Math.PI / 2) + (i * 4 * Math.PI / 5); // Five-pointed star
+                var x = starCenterX + starRadius * Math.cos(angle);
+                var y = starCenterY - starRadius * Math.sin(angle);
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.closePath();
+            ctx.fill();
+        }
+    }
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawAustraliaFlag(canvas, width, blueColor) {
+    var a = width / 2; // Height (aspect ratio 2:1)
+    var b = width; // Width
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Uniform scaling factor from SVG (1280x640) to canvas
+    var scale = b / 1280; // Applies to both x and y for 2:1 aspect ratio preservation
+
+    // Background (blue)
+    ctx.fillStyle = blueColor || '#00008B';
+    ctx.fillRect(0, 0, b, a);
+
+    // Union Jack (top-left quadrant, 0 to 640x320 in SVG)
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    // St. George's Cross (white fimbriation)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 192, 640, 64); // Horizontal arm (64px wide)
+    ctx.fillRect(192, 0, 64, 320); // Vertical arm
+    // Red St. George's Cross
+    ctx.fillStyle = '#FF0000';
+    ctx.fillRect(0, 208, 640, 32); // Horizontal (32px wide)
+    ctx.fillRect(208, 0, 32, 320); // Vertical
+
+    // St. Andrew's Cross (white diagonals with fimbriation)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.moveTo(0, 0); ctx.lineTo(128, 0); ctx.lineTo(640, 320); ctx.lineTo(512, 320); ctx.lineTo(0, 64); ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(640, 0); ctx.lineTo(512, 0); ctx.lineTo(0, 320); ctx.lineTo(128, 320); ctx.lineTo(640, 64); ctx.closePath();
+    ctx.fill();
+
+    // St. Patrick's Cross (red diagonals)
+    ctx.fillStyle = '#FF0000';
+    ctx.beginPath();
+    ctx.moveTo(64, 0); ctx.lineTo(256, 96); ctx.lineTo(448, 320); ctx.lineTo(384, 320); ctx.lineTo(192, 128); ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(576, 0); ctx.lineTo(640, 0); ctx.lineTo(448, 192); ctx.lineTo(256, 96); ctx.lineTo(64, 0); ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(192, 320); ctx.lineTo(384, 224); ctx.lineTo(576, 320); ctx.lineTo(640, 320); ctx.lineTo(448, 128); ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(0, 320); ctx.lineTo(64, 320); ctx.lineTo(256, 224); ctx.lineTo(64, 0); ctx.lineTo(0, 0); ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+
+    // Commonwealth Star (7-pointed, SVG center at 320,480)
+    ctx.save();
+    ctx.translate(320 * scale, 480 * scale);
+    ctx.fillStyle = '#FFFFFF';
+    var r = 60 * scale; // Radius 60px in SVG
+    var innerR = r * 0.382; // Inner radius for star points (golden ratio approximation)
+    ctx.beginPath();
+    for (var i = 0; i < 7; i++) {
+        var angle = (Math.PI / 2) + (i * 2 * Math.PI / 7);
+        var outerX = r * Math.cos(angle);
+        var outerY = -r * Math.sin(angle);
+        var innerX = innerR * Math.cos(angle + Math.PI / 7);
+        var innerY = -innerR * Math.sin(angle + Math.PI / 7);
+        if (i === 0) {
+            ctx.moveTo(outerX, outerY);
+            ctx.lineTo(innerX, innerY);
+        } else {
+            ctx.lineTo(outerX, outerY);
+            ctx.lineTo(innerX, innerY);
+        }
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+
+    // Southern Cross (5 stars: Alpha, Beta, Gamma, Delta, Epsilon)
+    var stars = [
+        {x: 947.2, y: 202.88, r: 60, points: 7, rot: -0.20943951023931953}, // Alpha Crucis
+        {x: 947.2, y: 350.08, r: 48, points: 7, rot: -0.20943951023931953}, // Beta Crucis
+        {x: 799.36, y: 202.88, r: 42, points: 7, rot: -0.20943951023931953}, // Gamma Crucis
+        {x: 719.36, y: 350.08, r: 36, points: 7, rot: -0.20943951023931953}, // Delta Crucis
+        {x: 799.36, y: 276.48, r: 30, points: 5, rot: 0}                     // Epsilon Crucis
+    ];
+    stars.forEach(star => {
+        ctx.save();
+        ctx.translate(star.x * scale, star.y * scale);
+        ctx.rotate(star.rot);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        var innerR = (star.r * scale) * 0.382; // Inner radius for star points
+        for (var i = 0; i < star.points; i++) {
+            var angle = (Math.PI / 2) + (i * 2 * Math.PI / star.points);
+            var outerX = (star.r * scale) * Math.cos(angle);
+            var outerY = -(star.r * scale) * Math.sin(angle);
+            var innerX = innerR * Math.cos(angle + Math.PI / star.points);
+            var innerY = -innerR * Math.sin(angle + Math.PI / star.points);
+            if (i === 0) {
+                ctx.moveTo(outerX, outerY);
+                ctx.lineTo(innerX, innerY);
+            } else {
+                ctx.lineTo(outerX, outerY);
+                ctx.lineTo(innerX, innerY);
+            }
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    });
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawAustriaFlag(canvas, width, blueColor) {
+    var a = width / 1.5; // Height (aspect ratio 2:3)
+    var b = width;
+    var stripeHeight = a / 3;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes (red-white-red)
+    ctx.fillStyle = '#c8102e';
+    ctx.fillRect(0, 0, b, stripeHeight);
+    ctx.fillRect(0, 2*stripeHeight, b, stripeHeight);
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, stripeHeight, b, stripeHeight);
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawBrazilFlag(canvas, width, blueColor) {
+    var a = width / 1.4; // Height (aspect ratio 7:10)
+    var b = width;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Green background
+    ctx.fillStyle = '#009b3a';
+    ctx.fillRect(0, 0, b, a);
+
+    // Yellow diamond
+    ctx.fillStyle = '#ffc107';
+    ctx.beginPath();
+    ctx.moveTo(b/2, a/10); // Top
+    ctx.lineTo(9*b/10, a/2); // Right
+    ctx.lineTo(b/2, 9*a/10); // Bottom
+    ctx.lineTo(b/10, a/2); // Left
+    ctx.closePath();
+    ctx.fill();
+
+    // Blue circle
+    ctx.fillStyle = blueColor || '#002776';
+    ctx.beginPath();
+    ctx.arc(b/2, a/2, a/4, 0, 2*Math.PI);
+    ctx.fill();
+
+    // White band (simplified)
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.moveTo(b/2 - a/5, a/2 - a/20);
+    ctx.quadraticCurveTo(b/2, a/2 + a/5, b/2 + a/5, a/2 - a/20);
+    ctx.lineTo(b/2 + a/5, a/2 + a/20);
+    ctx.quadraticCurveTo(b/2, a/2 + a/5 + a/20, b/2 - a/5, a/2 + a/20);
+    ctx.closePath();
+    ctx.fill();
+
+    // Stars (simplified to 5 for visibility)
+    ctx.fillStyle = '#fff';
+    var starRadius = a/50;
+    [{x: b/2, y: a/2 - a/10}, {x: b/2 + a/10, y: a/2}, {x: b/2 - a/10, y: a/2}, {x: b/2, y: a/2 + a/10}, {x: b/2 + a/15, y: a/2 - a/15}].forEach(star => {
+        ctx.beginPath();
+        for (var i = 0; i < 5; i++) {
+            var angle = (Math.PI / 2) + (i * 4 * Math.PI / 5);
+            var x = star.x + starRadius * Math.cos(angle);
+            var y = star.y - starRadius * Math.sin(angle);
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+    });
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawBelgiumFlag(canvas, width, blueColor) {
+    var a = width / 1.15; // Height (aspect ratio 13:15)
+    var b = width;
+    var stripeWidth = b / 3;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes (black-yellow-red)
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, stripeWidth, a);
+    ctx.fillStyle = '#ffc107';
+    ctx.fillRect(stripeWidth, 0, stripeWidth, a);
+    ctx.fillStyle = '#c8102e';
+    ctx.fillRect(2*stripeWidth, 0, stripeWidth, a);
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawCanadaFlag(canvas, width, blueColor) {
+    var a = width / 2; // Height (aspect ratio 1:2)
+    var b = width;
+    var stripeWidth = b / 4;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Red stripes
+    ctx.fillStyle = '#c8102e';
+    ctx.fillRect(0, 0, stripeWidth, a);
+    ctx.fillRect(3*stripeWidth, 0, stripeWidth, a);
+
+    // White center with maple leaf
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(stripeWidth, 0, 2*stripeWidth, a);
+
+    // Maple leaf (simplified)
+    ctx.fillStyle = '#c8102e';
+    ctx.beginPath();
+    ctx.moveTo(b/2, a/4);
+    ctx.lineTo(b/2 + a/10, a/2);
+    ctx.lineTo(b/2 + a/5, a/2);
+    ctx.lineTo(b/2 + a/10, 3*a/4);
+    ctx.lineTo(b/2 + a/20, 3*a/4);
+    ctx.lineTo(b/2, a/2 + a/10);
+    ctx.lineTo(b/2 - a/20, 3*a/4);
+    ctx.lineTo(b/2 - a/10, 3*a/4);
+    ctx.lineTo(b/2 - a/5, a/2);
+    ctx.lineTo(b/2 - a/10, a/2);
+    ctx.closePath();
+    ctx.fill();
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawChinaFlag(canvas, width, blueColor) {
+    var a = width / 1.5; // Height (aspect ratio 2:3)
+    var b = width;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Red background
+    ctx.fillStyle = '#de2910';
+    ctx.fillRect(0, 0, b, a);
+
+    // Large star
+    ctx.fillStyle = '#ffde00';
+    var cx = 5*b/30, cy = 5*a/20, r = 3*a/20;
+    ctx.beginPath();
+    for (var i = 0; i < 5; i++) {
+        var angle = (Math.PI / 2) + (i * 4 * Math.PI / 5);
+        var x = cx + r * Math.cos(angle);
+        var y = cy - r * Math.sin(angle);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fill();
+
+    // Small stars
+    var smallR = a/30;
+    [{x: 10*b/30, y: 2*a/20, rot: 55}, {x: 12*b/30, y: 4*a/20, rot: 145}, {x: 12*b/30, y: 7*a/20, rot: 0}, {x: 10*b/30, y: 9*a/20, rot: 55}].forEach(star => {
+        ctx.beginPath();
+        for (var i = 0; i < 5; i++) {
+            var angle = (Math.PI / 2) + (i * 4 * Math.PI / 5) + star.rot;
+            var x = star.x + smallR * Math.cos(angle);
+            var y = star.y - smallR * Math.sin(angle);
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+    });
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawFranceFlag(canvas, width, blueColor) {
+    var a = width / 1.5; // Height (aspect ratio 2:3)
+    var b = width;
+    var stripeWidth = b / 3;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes (blue-white-red)
+    ctx.fillStyle = blueColor || '#002395';
+    ctx.fillRect(0, 0, stripeWidth, a);
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(stripeWidth, 0, stripeWidth, a);
+    ctx.fillStyle = '#ed2939';
+    ctx.fillRect(2*stripeWidth, 0, stripeWidth, a);
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawGermanyFlag(canvas, width, blueColor) {
+    var a = width / 1.67; // Height (aspect ratio 3:5)
+    var b = width;
+    var stripeHeight = a / 3;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes (black-red-gold)
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, b, stripeHeight);
+    ctx.fillStyle = '#d00';
+    ctx.fillRect(0, stripeHeight, b, stripeHeight);
+    ctx.fillStyle = '#ffce00';
+    ctx.fillRect(0, 2*stripeHeight, b, stripeHeight);
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawIndiaFlag(canvas, width, blueColor) {
+    var a = width / 1.5; // Height (aspect ratio 2:3)
+    var b = width;
+    var stripeHeight = a / 3;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes (saffron-white-green)
+    ctx.fillStyle = '#ff9933';
+    ctx.fillRect(0, 0, b, stripeHeight);
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, stripeHeight, b, stripeHeight);
+    ctx.fillStyle = '#138808';
+    ctx.fillRect(0, 2*stripeHeight, b, stripeHeight);
+
+    // Ashoka Chakra (simplified blue wheel)
+    ctx.strokeStyle = blueColor || '#000080';
+    ctx.lineWidth = a / 50;
+    ctx.beginPath();
+    ctx.arc(b/2, a/2, a/6, 0, 2*Math.PI);
+    ctx.stroke();
+    // Spokes (24, simplified to 12)
+    for (var i = 0; i < 12; i++) {
+        var angle = i * Math.PI / 6;
+        ctx.beginPath();
+        ctx.moveTo(b/2 + a/10 * Math.cos(angle), a/2 - a/10 * Math.sin(angle));
+        ctx.lineTo(b/2 + a/6 * Math.cos(angle), a/2 - a/6 * Math.sin(angle));
+        ctx.stroke();
+    }
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawIndonesiaFlag(canvas, width, blueColor) {
+    var a = width / 1.5; // Height (aspect ratio 2:3)
+    var b = width;
+    var stripeHeight = a / 2;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes (red-white)
+    ctx.fillStyle = '#ff0000';
+    ctx.fillRect(0, 0, b, stripeHeight);
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, stripeHeight, b, stripeHeight);
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawItalyFlag(canvas, width, blueColor) {
+    var a = width / 1.5; // Height (aspect ratio 2:3)
+    var b = width;
+    var stripeWidth = b / 3;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes (green-white-red)
+    ctx.fillStyle = '#008C45';
+    ctx.fillRect(0, 0, stripeWidth, a);
+    ctx.fillStyle = '#F4F9FF';
+    ctx.fillRect(stripeWidth, 0, stripeWidth, a);
+    ctx.fillStyle = '#CD212A';
+    ctx.fillRect(2*stripeWidth, 0, stripeWidth, a);
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawMalaysiaFlag(canvas, width, blueColor) {
+    var a = width / 2; // Height (aspect ratio 1:2)
+    var b = width;
+    var stripeHeight = a / 14; // 14 stripes
+    var cantonWidth = b / 2;
+    var cantonHeight = a / 2;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes (red-white)
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, b, a);
+    ctx.fillStyle = '#cc0000';
+    for (var i = 0; i < 14; i += 2) {
+        ctx.fillRect(0, i * stripeHeight, b, stripeHeight);
+    }
+
+    // Canton
+    ctx.fillStyle = blueColor || '#010066';
+    ctx.fillRect(0, 0, cantonWidth, cantonHeight);
+
+    // Crescent
+    ctx.fillStyle = '#ffc107';
+    ctx.beginPath();
+    ctx.arc(cantonWidth/3, cantonHeight/2, a/8, 0, 2*Math.PI);
+    ctx.fill();
+    ctx.fillStyle = blueColor || '#010066';
+    ctx.beginPath();
+    ctx.arc(cantonWidth/3 + a/20, cantonHeight/2, a/10, 0, 2*Math.PI);
+    ctx.fill();
+
+    // Star (14-pointed)
+    ctx.fillStyle = '#ffc107';
+    var cx = cantonWidth/2, cy = cantonHeight/2, r = a/12;
+    ctx.beginPath();
+    for (var i = 0; i < 14; i++) {
+        var angle = (Math.PI / 2) + (i * 2 * Math.PI / 14);
+        var x = cx + r * Math.cos(angle);
+        var y = cy - r * Math.sin(angle);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fill();
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawMexicoFlag(canvas, width, blueColor) {
+    var a = width / 1.75; // Height (aspect ratio 4:7)
+    var b = width;
+    var stripeWidth = b / 3;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes (green-white-red)
+    ctx.fillStyle = '#006847';
+    ctx.fillRect(0, 0, stripeWidth, a);
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(stripeWidth, 0, stripeWidth, a);
+    ctx.fillStyle = '#ce00002c';
+    ctx.fillRect(2*stripeWidth, 0, stripeWidth, stripeWidth, a);
+    // Crest (simplified eagle)
+    ctx.fillStyle = '#000';
+    ctx.beginPath();
+    ctx.arc(b/2, a/2, a/8, a/8, 0, 2*Math.PI);
+    ctx.fill();
+    ctx.fillRect(b/2 - a/20, a/2, a/10, a/5);
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawNetherlandsFlag(canvas, width, blueColor) {
+    var a = width / 1.5; // Height (aspect ratio 2:3)
+    var b = width;
+    var stripeHeight = a / 3;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes (red-white-blue)
+    ctx.fillStyle = '#AE1C28';
+    ctx.fillRect(0, 0, b, stripeHeight);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, stripeHeight, b, stripeHeight);
+    ctx.fillStyle = blueColor || '#21468b';
+    ctx.fillRect(0, 2*stripeHeight, b, stripeHeight);
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawNewZealandFlag(canvas, width, blueColor) {
+    var a = width / 1.5; // Height (aspect ratio 2:3)
+    var b = width;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Background
+    ctx.fillStyle = blueColor || '#0000bb';
+    ctx.fillRect(0, 0, b, a);
+
+    // Union Jack (simplified)
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.moveTo(0, 0); ctx.lineTo(b/4, a/2); ctx.lineTo(0, a/2); ctx.fill();
+    ctx.moveTo(b/4, 0); ctx.lineTo(0, a/4); ctx.lineTo(b/8, a/4); ctx.lineTo(0, a/2); ctx.fill();
+    ctx.fillStyle = '#c8102e';
+    ctx.fillRect(0, a/4 - a/20, b/4, a/10);
+    ctx.fillRect(b/8 - b/40, 0, b/20, a/2);
+
+    // Southern Cross (4 stars, red with white border)
+    var stars = [
+        {x: 3*b/4, y: 3*a/4, r: a/20}, // Alpha Crucis
+        {x: 3*b/4, y: a/2, r: a/20},   // Beta Crucis
+        {x: 5*b/8, y: 3*a/4, r: a/30}, // Gamma Crucis
+        {x: 5*b/8, y: a/2, r: a/30}    // Delta Crucis
+    ];
+    stars.forEach(star => {
+        // White border
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        for (var i = 0; i < 5; i++) {
+            var angle = (Math.PI / 2) + (i * 4 * Math.PI / 5);
+            var x = star.x + star.r * 1.2 * Math.cos(angle);
+            var y = star.y - star.r * 1.2 * Math.sin(angle);
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+
+        // Red star
+        ctx.fillStyle = '#c8102e';
+        ctx.beginPath();
+        for (var i = 0; i < 5; i++) {
+            var angle = (Math.PI / 2) + (i * 4 * Math.PI / 5);
+            var x = star.x + star.r * Math.cos(angle);
+            var y = star.y - star.r * Math.sin(angle);
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+    });
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawNorwayFlag(canvas, width) {
+    var a = canvas.height;
+    var b = canvas.width;
+    var crossWidth = 4 * b / 22;
+    var crossHeight = 4 * a / 16;
+
+    var ctx = canvas.getContext('2d');
+
+    // Red background
+    ctx.fillStyle = '#FF0000';
+    ctx.fillRect(0, 0, b, a);
+
+    // White cross
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(6*b/22, 0, 4*b/22, a);
+    ctx.fillRect(0, 6*a/16, b, 4*a/16);
+//
+    //// Blue cross
+    ctx.fillStyle = '#002868';
+    ctx.fillRect(7*b/22, 0, 2*b/22, a);
+    ctx.fillRect(0, 7*a/16, b, 2*a/16);
+    //ctx.fillRect(b + b/4, 0, b, a);
+}
+
+function drawPhilippinesFlag(canvas, width, blueColor) {
+    var a = width / 2; // Height (aspect ratio 1:2)
+    var b = width;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes (blue-red)
+    ctx.fillStyle = blueColor || '#0038a8';
+    ctx.fillRect(0, 0, b, a/2);
+    ctx.fillStyle = '#ce1126';
+    ctx.fillRect(0, a/2, b, a/2);
+
+    // Triangle
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.moveTo(0,0); ctx.lineTo(b/3, a/2); ctx.lineTo(0, a); ctx.closePath();
+    ctx.fill();
+
+    // Sun (8 rays)
+    ctx.fillStyle = '#ffc107';
+    ctx.beginPath();
+    ctx.arc(b/6, a/2, a/10, 0, 2*Math.PI);
+    ctx.fill();
+    for (var i = 0; i < 8; i++) {
+        var angle = i * Math.PI / 4;
+        ctx.beginPath();
+        ctx.moveTo(b/6, a/2);
+        ctx.lineTo(b/6 + a/8 * Math.cos(angle), a/2 - a/8 * Math.sin(angle));
+        ctx.lineTo(b/6 + a/8 * Math.cos(angle + Math.PI/16), a/2 - a/8 * Math.sin(angle + Math.PI/16));
+        ctx.fill();
+    }
+
+    // Stars
+    ctx.fillStyle = '#ffc';
+    var starRadius = a/107;
+    [{x: b/12, y: a/6}, {x: b/12, y: 5*a/6}, {x: b/4, y: a/2}].forEach(star => {
+        ctx.beginPath();
+        for (var i = 0; i < 5; i++) {
+            var angle = (Math.PI / 2) + (i * 4 * Math.PI / 5);
+            var x = star.x + starRadius * Math.cos(angle);
+            var y = star.y - starRadius * Math.sin(angle);
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+    });
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawPolandFlag(canvas, width, blueColor) {
+    var a = width / 1.6; // Height (aspect ratio 5:8)
+    var b = width;
+    var stripeHeight = a / 2;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes (white-red)
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, b, stripeHeight);
+    ctx.fillStyle = '#dc143c';
+    ctx.fillRect(0, stripeHeight, b, stripeHeight);
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawRomaniaFlag(canvas, width, blueColor) {
+    var a = width / 1.5; // Height (aspect ratio 2:3)
+    var b = width;
+    var stripeWidth = b / 3;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes (blue-yellow-red)
+    ctx.fillStyle = blueColor || '#002b7f';
+    ctx.fillRect(0, 0, stripeWidth, a);
+    ctx.fillStyle = '#fcd116';
+    ctx.fillRect(stripeWidth, 0, stripeWidth, a);
+    ctx.fillStyle = '#ce1126';
+    ctx.fillRect(2*stripeWidth, 0, stripeWidth, a);
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawRussiaFlag(canvas, width, blueColor) {
+  var a = width / 1.5; // Height (aspect ratio 2:3)
+    var b = width;
+    var stripeHeight = a / 3;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes (white-blue-red)
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, b, stripeHeight);
+    ctx.fillStyle = '#0036A7';
+    ctx.fillRect(0, stripeHeight, b, stripeHeight);
+    ctx.fillStyle = '#D62718';
+    ctx.fillRect(0, 2*stripeHeight, b, stripeHeight);
+}
+
+function drawSaudiArabiaFlag(canvas, width, blueColor) {
+    var a = width / 1.5; // Height (aspect ratio 2:3)
+    var b = width;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Green background
+    ctx.fillStyle = '#00cc00';
+    ctx.fillRect(0, 0, b, a);
+
+    // White sword
+(simplified)
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(b/4, 2*a/3, b/2, a/20);
+    ctx.beginPath();
+    ctx.moveTo(b/4, 2*a/3);
+    ctx.lineTo(b/3, a/2);
+    ctx.lineTo(b/2, 2*a/3);
+    ctx.fill();
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawSignalRGBFlag(canvas, width, blueColor) {
+    var a = width / 1.5; // Height (aspect ratio 2:3)
+    var b = width;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Gradient background (RGB theme)
+    var grad = ctx.createLinearGradient(0, 0, b, 0);
+    grad.addColorStop(0, '#ff0000');
+    grad.addColorStop(0.5, '#00ff00');
+    grad.addColorStop(1, '#0000ff');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, b, a);
+
+    // Central "RGB" text
+    ctx.fillStyle = '#fff';
+    ctx.font = `${a/2}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('RGB', b/2, a/2);
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawSpainFlag(canvas, width, blueColor) {
+    var a = width / 1.5; // Height (aspect ratio 2:3)
+    var b = width;
+    var stripeHeight = a / 4;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes (red-yellow-red)
+    ctx.fillStyle = '#c60';
+    ctx.fillRect(0, b0, 0, b, stripeHeight);
+    ctx.fillRect(0, 3*stripeHeight, b, stripeHeight);
+    ctx.fillStyle = '#ffc107';
+    ctx.fillRect(0, stripeHeight, b, 2*stripeHeight);
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawSwedenFlag(canvas, width, blueColor) {
+    var a = canvas.height;
+    var b = canvas.width;
+
+    var ctx = canvas.getContext('2d');
+
+    // Blue background
+    ctx.fillStyle = '#006AA7';
+    ctx.fillRect(0, 0, b, a);
+
+    // Yellow cross
+    ctx.fillStyle = '#FECC02';
+    ctx.fillRect(5*b/16, 0, 2*b/16, a);
+    ctx.fillRect(0, 4*a/10, b, 2*a/10);
+}
+
+function drawSwitzerlandFlag(canvas, width, blueColor) {
+    var a = canvas.height;
+    var b = canvas.width;
+
+    var ctx = canvas.getContext('2d');
+
+    // Red background
+    ctx.fillStyle = '#DA291C';
+    ctx.fillRect(0, 0, b, a);
+
+    // White cross
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(b/2-b/16, b/8, 2*b/16, a-2*b/8);
+    ctx.fillRect(a/2, 4*a/10, b-10*a/10, 2*a/10);
+}
+
+function drawThailandFlag(canvas, width, blueColor) {
+    var a = width / 1.5; // Height (aspect ratio 2:3)
+    var b = width;
+    var stripeHeight = a / 6;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Stripes (red-white-blue-white-red)
+    ctx.fillStyle = '#a51931';
+    ctx.fillRect(0, 0, b, stripeHeight);
+    ctx.fillRect(0, 5*stripeHeight, b, stripeHeight);
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, stripeHeight, b, stripeHeight);
+    ctx.fillRect(0, 4*stripeHeight, b, stripeHeight);
+    ctx.fillStyle = blueColor || '#2d2a4a';
+    ctx.fillRect(0, 2*stripeHeight, b, 2*stripeHeight);
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawUAEFlag(canvas, width, blueColor) {
+    var a = width / 2; // Height (aspect ratio 1:2)
+    var b = width;
+    var stripeHeight = a / 3;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Red vertical stripe
+    ctx.fillStyle = '#ef302f';
+    ctx.fillRect(0, 0, b/4, a);
+
+    // Horizontal stripes (green-white-black)
+    ctx.fillStyle = '#00732f';
+    ctx.fillRect(b/4, 0, 3*b/4, stripeHeight);
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(b/4, stripeHeight, 3*b/4, stripeHeight);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(b/4, 2*stripeHeight, 3*b/4, stripeHeight);
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawUKFlag(canvas, width, blueColor) {
+    var a = width / 2; // Height (aspect ratio 1:2)
+    var b = width;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Blue background
+    ctx.fillStyle = blueColor || '#00247d';
+    ctx.fillRect(0, 0, b, a);
+
+    // White diagonals (St. Andrew's Cross)
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.moveTo(0, 0); ctx.lineTo(b/5, 0); ctx.lineTo(b, a/2); ctx.lineTo(b, a/5); ctx.lineTo(3*b/5, a); ctx.lineTo(0, a); ctx.fill();
+    ctx.moveTo(b, 0); ctx.lineTo(4*b/5, 0); ctx.lineTo(0, a/2); ctx.lineTo(0, 4*a/5); ctx.lineTo(2*b/5, a); ctx.lineTo(b, a); ctx.fill();
+
+    // Red diagonals (St. Patrick's Cross, simplified)
+    ctx.fillStyle = '#cf142b';
+    ctx.beginPath();
+    ctx.moveTo(b/5, 0); ctx.lineTo(b, a/2); ctx.lineTo(b, 3*a/10); ctx.lineTo(3*b/10, a); ctx.lineTo(0, a); ctx.lineTo(0, 4*a/5); ctx.fill();
+    ctx.moveTo(4*b/5, 0); ctx.lineTo(b, 0); ctx.lineTo(b, a/5); ctx.lineTo(2*b/5, a); ctx.lineTo(0, a/2); ctx.lineTo(0, a/10); ctx.fill();
+
+    // White cross (St. George's Cross)
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 2*a/5, b, a/5);
+    ctx.fillRect(2*b/5, 0, b/5, a);
+
+    // Red cross
+    ctx.fillStyle = '#cf142b';
+    ctx.fillRect(0, 9*a/20, b, a/10);
+    ctx.fillRect(9*b/20, 0, b/10, a);
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
+
+function drawVietnamFlag(canvas, width, blueColor) {
+    var a = width / 1.5; // Height (aspect ratio 2:3)
+    var b = width;
+    canvas.width = b;
+    canvas.height = a;
+    var ctx = canvas.getContext('2d');
+
+    // Red background
+    ctx.fillStyle = '#da251d';
+    ctx.fillRect(0, 0, b, a);
+
+    // Yellow star
+    ctx.fillStyle = '#ffff00';
+    var cx = b/2, cy = a/2, r = a/5;
+    ctx.beginPath();
+    for (var i = 0; i < 5; i++) {
+        var angle = (Math.PI / 2) + (i * 4 * Math.PI / 5);
+        var x = cx + r * Math.cos(angle);
+        var y = cy - r * Math.sin(angle);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fill();
+
+    // Border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b, a);
+}
 
   function waveFlag(canvas, width, wavelength, amplitude, period, shading) {
     var ctx = canvas.getContext('2d');
@@ -188,7 +1391,7 @@
 
   window.onload = function () {
     // Initialize state
-    currentFlagStyle = flagStyle || 'Official';
+    currentflag = flag || 'Puerto Rico';
     currentEnableAnimation = enableAnimation || true;
     updateFlag();
     setInterval(checkForChanges, 500); // Poll for global variable changes
