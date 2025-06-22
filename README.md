@@ -7,4 +7,7 @@ Installation:
 
 You will find the new effect in Library > Installed Effects
 
-Update: Now it is sound responsive!
+Update:
+
+1. Now it is sound responsive!
+2. Added several simple flags. Some flags are very difficult to draw...
