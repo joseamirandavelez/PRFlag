@@ -8,7 +8,7 @@
   <!-- SignalRGB Controls -->
   <meta property="enableAnimation" label="Enable Animation" type="boolean" default="true">
   <meta property="flag" label="Country" type="combobox"
-    values="Australia,Austria,Belgium,Brazil,Canada,China,France,Germany,India,Indonesia,Italy,Malaysia,Mexico,Netherlands,New Zealand,Norway,Poland,Philippines,Puerto Rico,Puerto Rico (Revolutionary),Romania,Russia,Saudi Arabia,SignalRGB,Spain,Sweden,Switzerland,Thailand,Ukraine,United Arab Emirates,United Kingdom,United States of America,Vietnam,Custom"
+    values="Australia,Austria,Belgium,Brazil,Canada,China,France,Germany,India,Indonesia,Italy,Malaysia,Mexico,Netherlands,New Zealand,Norway,Poland,Philippines,Puerto Rico,Puerto Rico (with border),Puerto Rico (Revolutionary),Puerto Rico (Black),Romania,Russia,Saudi Arabia,SignalRGB,Spain,Sweden,Switzerland,Thailand,Ukraine,United Arab Emirates,United Kingdom,United States of America,Vietnam,Custom"
     default="Puerto Rico">
   <meta property="customImage" label="Custom Image URL" type="textfield"
     default="https://i.ibb.co/4ZLRWR0/signal-rgb.jpg">
@@ -138,8 +138,16 @@
         drawPuertoRicoFlag(canvas, 320, '#0044ff');
         finalizeDrawing();
         break;
+      case "Puerto Rico (with border)":
+        drawPuertoRicoFlag(canvas, 320, '#0044ff',true);
+        finalizeDrawing();
+        break;
       case "Puerto Rico (Revolutionary)":
         drawPuertoRicoFlag(canvas, 320, '#88CFFA');
+        finalizeDrawing();
+        break;
+      case "Puerto Rico (Black)":
+        drawPuertoRicoFlag(canvas, 320, '#000');
         finalizeDrawing();
         break;
       case "Romania":
@@ -211,7 +219,7 @@
     }
   }
 
-  function drawPuertoRicoFlag(canvas, width, blueColor) {
+  function drawPuertoRicoFlag(canvas, width, blueColor, stroke = false) {
     currentFlag = flag;
     var a = width / 1.5; // Height (aspect ratio 2:3, so height = width / 1.5)
     var b = width; // Width
@@ -221,12 +229,27 @@
     canvas.height = a;
     var ctx = canvas.getContext('2d');
 
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 3;
+
     // Stripes
     ctx.fillStyle = '#fff'; // White
     ctx.fillRect(0, 0, b, a); // White background
-    ctx.fillStyle = '#ed0000'; // Red (official color)
+    if (blueColor === '#000') {
+      ctx.fillStyle = '#000'; // Red (official color)
+    } else {
+      ctx.fillStyle = '#ed0000'; // Red (official color)
+    }
+    
     for (var i = 0; i < 5; i += 2) { // Red stripes at indices 0, 2, 4
+      // Fill the rectangle
       ctx.fillRect(0, i * l, b, l);
+      // Create a path for stroking the rectangle
+      ctx.beginPath();
+      ctx.rect(0, i * l, b, l);
+      if (stroke) {
+        ctx.stroke();
+      }
     }
 
     // Triangle
@@ -237,6 +260,9 @@
     ctx.lineTo(0, a); // Bottom-left
     ctx.closePath();
     ctx.fill();
+    if (stroke) {
+        ctx.stroke();
+    }
 
     // Star
     ctx.fillStyle = '#fff'; // White
@@ -244,18 +270,26 @@
     var starCenterY = a / 2;
     var starRadius = l * 0.8; // Adjust star size relative to stripe height
     ctx.beginPath();
-    for (var i = 0; i < 5; i++) {
-      var angle = (Math.PI / 2) + (i * 4 * Math.PI / 5); // Five-pointed star
-      var x = starCenterX + starRadius * Math.cos(angle);
-      var y = starCenterY - starRadius * Math.sin(angle);
+
+    const innerRadius = starRadius * 0.38197; // Approx. ratio for a star (can adjust for sharper/deeper valleys)
+    for (var i = 0; i < 10; i++) {
+      const isOuter = i % 2 === 0; // Alternate between outer and inner points
+      const radius = isOuter ? starRadius : innerRadius;
+      const angle = (Math.PI / 2) + (i * Math.PI / 5); // 10 points (5 outer, 5 inner), so π/5 per step
+      const x = starCenterX + radius * Math.cos(angle);
+      const y = starCenterY - radius * Math.sin(angle);
       if (i === 0) {
         ctx.moveTo(x, y);
       } else {
         ctx.lineTo(x, y);
       }
     }
+
     ctx.closePath();
     ctx.fill();
+    if (stroke) {
+      ctx.stroke();
+    }
 
   }
 
@@ -701,7 +735,6 @@
   function drawCustomFlag(canvas, width, callback) {
     drawCustomImage(canvas, customImage, callback);
   }
-
 
   function waveFlag(canvas, width, wavelength, amplitude, period, shading) {
     var ctx = canvas.getContext('2d');
