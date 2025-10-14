@@ -64,7 +64,9 @@
     // Function to start animation or ensure canvas is drawn
     const finalizeDrawing = () => {
       if (enableAnimation) {
-        timer = waveFlag(canvas, 320, 40, 15, 200, 100);
+        // ⭐ INCREASE PERIOD (Speed) from 250 to 500 for a slower, more realistic animation.
+        // Parameters: (canvas, width, wavelength, amplitude, PERIOD, shading)
+        timer = waveFlag(canvas, 320, 40, 15, 50, 150); 
       }
     };
 
@@ -739,55 +741,65 @@
   function waveFlag(canvas, width, wavelength, amplitude, period, shading) {
     var ctx = canvas.getContext('2d');
     var w = canvas.width, h = canvas.height;
-    var od = ctx.getImageData(0, 0, w, h).data; // Original image data
+    var od = ctx.getImageData(0, 0, w, h).data; 
+
+    // We use startTime to calculate the elapsed time for smooth animation phase control.
+    const startTime = Date.now(); 
 
     function animate() {
-      // Clear canvas to prevent residual images
       ctx.clearRect(0, 0, w, h);
       var id = ctx.getImageData(0, 0, w, h);
       var d = id.data;
-      var now = Date.now() / period;
+      
+      // FORCED SPEED: Calculate phase based on elapsed time divided by the period parameter.
+      var elapsedTime = Date.now() - startTime;
+      var now = elapsedTime / period; 
+
+      // ------------------------------------------------------------------
+      // STABLE AUDIO MODULATION (MODULATES AMPLITUDE)
+      let effectiveAmplitude = amplitude;
+      
+      if (soundResponsive == true && typeof engine !== 'undefined' && engine.audio) {
+          // Subtle audio boost
+          let audioBoost = engine.audio.level * soundResponsiveness * 0.1; 
+          audioBoost = Math.min(5, audioBoost);
+          effectiveAmplitude = amplitude + audioBoost;
+      }
+      // ------------------------------------------------------------------
 
       for (var y = 0; y < h; ++y) {
         var lastO = 0;
         for (var x = 0; x < w; ++x) {
-          // Wave with damping and perspective, no vertical variation for smoothness
-          var damp = 1 - (x / w) * 0.6; // Strong damping toward free end
+          // ⭐ BALANCED DAMPING: Change 0.2 to 0.4 for a more realistic fall-off effect.
+          var damp = 1 - (x / w) * 0.4; 
+          
+          // Realistic Perspective
+          var perspective = 1 + (x / w) * 0.8; 
 
-          if (soundResponsive == true) {
-            //var frequency = new Int8Array(engine.audio.freq)
-            //reducedFreq = frequency.filter((element, index) => {
-            //    return index % 4 === 0;
-            //})
-            //var perspective = 1 + (x / w) * 2 + reducedFreq[5]*soundResponsiveness/10 ; // Subtle 3D effect
-            var perspective = 1 + (x / w) * 2 + engine.audio.level * engine.audio.density * soundResponsiveness; // Subtle 3D effect
-          } else {
-            var perspective = 1 + (x / w) * 0.6; // Enhanced perspective
-          }
-
-          var o = Math.sin(x / wavelength - now) * amplitude * damp * perspective * (x / w); // Pinned at x=0
+          // Apply wave calculation
+          var o = Math.sin(x / wavelength - now) * effectiveAmplitude * damp * perspective * (x / w); 
+          
           var yOffset = Math.round(y + o);
-          var xOffset = x; // No horizontal wave to reduce twitchiness
+          var xOffset = x; 
 
-          // Calculate pixel indices
-          var px = (y * w + x) * 4; // Destination pixel
-          var opx = (yOffset * w + xOffset) * 4; // Source pixel
+          var px = (y * w + x) * 4; 
+          var opx = (yOffset * w + xOffset) * 4; 
 
           // Shading based on wave slope for fabric folds
           var slope = (o - lastO) * shading * 3;
-          var shade = Math.min(40, Math.max(-40, slope)); // Tight clamp for smooth lighting
+          var shade = Math.min(40, Math.max(-40, slope)); 
 
-          // Copy pixel with shading, ensure bounds
+          // Copy pixel with shading
           if (opx >= 0 && opx < od.length && yOffset >= 0 && yOffset < h) {
             d[px] = Math.min(255, Math.max(0, od[opx] * (1 + shade / 255)));
             d[px + 1] = Math.min(255, Math.max(0, od[opx + 1] * (1 + shade / 255)));
             d[px + 2] = Math.min(255, Math.max(0, od[opx + 2] * (1 + shade / 255)));
-            d[px + 3] = od[opx + 3]; // Preserve alpha
+            d[px + 3] = od[opx + 3];
           } else {
-            d[px] = 0; // Black background for out-of-bounds
+            d[px] = 0; 
             d[px + 1] = 0;
             d[px + 2] = 0;
-            d[px + 3] = 255; // Fully opaque
+            d[px + 3] = 255; 
           }
           lastO = o;
         }
@@ -832,7 +844,7 @@
 
   function startAnimation(canvas) {
     if (enableAnimation) {
-      timer = waveFlag(canvas, 320, 40, 15, 200, 100);
+      timer = waveFlag(canvas, 320, 40, 15, 1, 100);
     }
   }
 
